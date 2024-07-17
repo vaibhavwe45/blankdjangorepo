@@ -48,11 +48,21 @@ jobs:
         id: hash
         run: |
           set -euo pipefail
+          files=$(ls artifact*)
+          # Generate the subjects (base64 encoded).
+          echo "hashes=$(sha256sum $files | base64 -w0)" >> "${GITHUB_OUTPUT}"
+
+          # Set SUCCESS to true if the hash generation was successful
+          SUCCESS=true
 
           # List the artifacts the provenance will refer to.
           files=$(ls artifact*)
           # Generate the subjects (base64 encoded).
           echo "hashes=$(sha256sum $files | base64 -w0)" >> "${GITHUB_OUTPUT}"
+      - name: Set CONTINUE
+          run:| 
+          set -euo pipefail
+          CONTINUE=true
 
   provenance:
     needs: [build]
