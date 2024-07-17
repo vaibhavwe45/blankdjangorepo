@@ -57,13 +57,11 @@ jobs:
   provenance:
     needs: [build]
     permissions:
-      actions: read   # To read the workflow path.
-      id-token: write # To sign the provenance.
-      contents: write # To add assets to a release.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.4.0
-    env:
-      UNTRUSTED_SUBJECTS: ${{ needs.build.outputs.digests }}
+      actions: read
+      id-token: write
+      contents: write
+    # Can't pin with hash due to how this workflow works.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
     with:
-      compile-generator: true
-      base64-subjects: "${{ needs.build.outputs.digests }}"
+      base64-subjects: ${{ needs.build.outputs.hash }}
       upload-assets: true # Optional: Upload to a new release
